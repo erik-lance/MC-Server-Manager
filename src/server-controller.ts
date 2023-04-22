@@ -56,22 +56,22 @@ export async function isServerRunning(): Promise<boolean> {
     return new Promise((resolve, reject) => {
         // Get list of running pm2 processes
         pm2.list((err: Error, processes: ProcessDescription[]) => {
-        if (err) {
-            reject(err);
-            return;
-        }
-        // Check if Minecraft server process is running
-        const isRunning = processes.some((p) => {
-            const server_env = p.pm2_env;
-            const name_check:boolean = p.name === 'minecraft-server';
-            
-            if (server_env !== undefined && server_env.status !== undefined)
-            {
-                const status_check:boolean = server_env.status === 'online';
-                return name_check && status_check;
+            if (err) {
+                reject(err);
+                return;
             }
-        });
-        resolve(isRunning);
+            // Check if Minecraft server process is running
+            const isRunning = processes.some((p) => {
+                const server_env = p.pm2_env;
+                const name_check:boolean = p.name === 'minecraft-server';
+                
+                if (server_env !== undefined && server_env.status !== undefined)
+                {
+                    const status_check:boolean = server_env.status === 'online';
+                    return name_check && status_check;
+                }
+            });
+            resolve(isRunning);
         });
     });
 }
