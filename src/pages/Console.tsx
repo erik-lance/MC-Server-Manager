@@ -4,15 +4,15 @@ function Console() {
     const [consoleOutput, setConsoleOutput] = useState("");
 
     useEffect(() => {
-        const socket = new WebSocket("ws://localhost:5173"); // Replace with your WebSocket URL
+        // const socket = new WebSocket("ws://localhost:5173"); // Replace with your WebSocket URL
 
-        socket.onmessage = (event) => {
-            setConsoleOutput((prevOutput) => prevOutput + event.data);
-        };
+        // socket.onmessage = (event) => {
+        //     setConsoleOutput((prevOutput) => prevOutput + event.data);
+        // };
 
-        return () => {
-            socket.close();
-        };
+        // return () => {
+        //     socket.close();
+        // };
     }, []);
 
     return (
