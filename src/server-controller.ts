@@ -10,12 +10,19 @@ async function startServer(): Promise<void> {
             args: ['-Xmx2G', '-Xms2G', '-jar', '../../minecraft_server/server.jar', 'nogui'],
             cwd: './server',
         },
-        function (err: Error, apps: Proc) {
+        function (err: Error, apps: ProcessDescription) {
             if (err) {
                 reject(err);
                 return;
             }
-            console.log(`Started Minecraft server with pm2`);
+
+            if (apps !== undefined && apps.pm_id !== undefined) {
+                console.log(`Stopped Minecraft server with pm2: ${apps.pm_id}`);
+            }
+            else  {
+                reject(new Error("No apps found"));
+                return;
+            }
             resolve();
         }
         );
@@ -30,11 +37,14 @@ function stopServer(): Promise<void> {
                 reject(err);
                 return;
             }
-            if (!apps) {
+
+            if (apps !== undefined && apps.pm_id !== undefined) {
+                console.log(`Stopped Minecraft server with pm2: ${apps.pm_id}`);
+            }
+            else  {
                 reject(new Error("No apps found"));
                 return;
             }
-            console.log(`Stopped Minecraft server with pm2`);
             resolve();
         });
     });
