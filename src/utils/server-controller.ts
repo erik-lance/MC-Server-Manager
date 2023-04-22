@@ -1,5 +1,6 @@
 //import { spawn } from 'child_process';
 import pm2, { ProcessDescription, Proc } from 'pm2';
+import net from 'net';
 
 export async function startServer(): Promise<void> {
     return new Promise((resolve, reject) => {
@@ -31,6 +32,12 @@ export async function startServer(): Promise<void> {
 
 export function stopServer(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
+        // Send the "stop" command to the server
+        const client = net.connect({ port: 25565 }, () => {
+            client.write('stop\n');
+            client.end();
+        });
+
         // Stop the server with pm2
         pm2.stop('minecraft-server', function(err: Error | null, apps: Proc) {
             if (err) {
