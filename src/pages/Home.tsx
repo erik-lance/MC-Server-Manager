@@ -1,17 +1,39 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { startServer, stopServer, isServerRunning } from '../utils/server-controller';
 
 function Home() {
     const [serverState, setServerState] = useState('off');
 
-    function handleServerToggle() {
+    async function handleServerToggle() {
         if (serverState === 'off') {
-            // start the server
-            setServerState('on');
+            try {
+                await startServer();
+                setServerState('on');
+            } catch (err) {
+                console.error('Error starting server:', err);
+            }
         } else {
-            // stop the server
-            setServerState('off');
+            try {
+                await stopServer();
+                setServerState('off');
+            } catch (err) {
+                console.error('Error stopping server:', err);
+            }
         }
     }
+
+    async function checkServerState() {
+        try {
+            const running = await isServerRunning();
+            setServerState(running ? 'on' : 'off');
+        } catch (err) {
+            console.error('Error checking server state:', err);
+        }
+    }
+
+    useEffect(() => {
+        checkServerState();
+    }, []);
 
     return (
         <div>
