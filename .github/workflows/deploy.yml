@@ -1,0 +1,25 @@
+name: Deploy to Azure VM
+on:
+  push:
+    branches:
+      - master
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deploy changes to Node 1
+        uses: appleboy/ssh-action@master
+        with:
+          host: 4.194.233.210
+          username: azureuser
+          key: ${{ secrets.AZURE_DEPLOYMENT_KEY }}
+          timeout-minutes: 5
+          continue-on-error: true
+          script: |
+            cd ~/MC-Server-Manager
+            git pull
+            npm install
+            pm2 stop my-app                # Stop the existing PM2 process (if any)
+            pm2 delete my-app              # Delete the existing PM2 process (if any)
+            pm2 start vite --name my-app  # Start your Node.js application with PM2
