@@ -22,4 +22,4 @@ jobs:
             npm install
             pm2 stop my-app                # Stop the existing PM2 process (if any)
             pm2 delete my-app              # Delete the existing PM2 process (if any)
-            pm2 start vite --name my-app  # Start your Node.js application with PM2
+            pm2 start npm --name my-app    # Start your Node.js application with PM2
